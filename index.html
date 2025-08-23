@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workout Timer Pro</title>
@@ -8,8 +10,13 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#5D5CDE',
-                        'primary-dark': '#4c4bb8',
+                        primary: '#FF8C00',
+                        'primary-dark': '#FF6B00',
+                        'industrial-orange': '#FF8C00',
+                        'industrial-yellow': '#FFB300',
+                        'industrial-dark': '#1A1A1A',
+                        'industrial-steel': '#2D2D2D',
+                        'industrial-light': '#3A3A3A',
                     }
                 }
             }
@@ -58,14 +65,14 @@
         
         .timeline-active {
             transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(93, 92, 222, 0.3);
+            box-shadow: 0 8px 25px rgba(255, 140, 0, 0.4);
         }
         
         .dashboard-mode {
             position: fixed;
             inset: 0;
             z-index: 1000;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 50%, #3A3A3A 100%);
             display: none;
         }
         
@@ -97,8 +104,8 @@
         }
         
         @keyframes glow {
-            from { box-shadow: 0 0 20px rgba(93, 92, 222, 0.5); }
-            to { box-shadow: 0 0 40px rgba(93, 92, 222, 0.8); }
+            from { box-shadow: 0 0 20px rgba(255, 140, 0, 0.5); }
+            to { box-shadow: 0 0 40px rgba(255, 140, 0, 0.8); }
         }
         
         @media (max-width: 768px) {
@@ -137,13 +144,13 @@
         
         .drag-placeholder {
             height: 80px;
-            border: 2px dashed #5D5CDE;
+            border: 2px dashed #FF8C00;
             border-radius: 8px;
-            background: rgba(93, 92, 222, 0.1);
+            background: rgba(255, 140, 0, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #5D5CDE;
+            color: #FF8C00;
             font-weight: 500;
             margin: 8px 0;
         }
@@ -157,9 +164,51 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
     </style>
-<script src="https://puc.poecdn.net/authenticated_preview_page/syncedState.bd4eeeb8e8e02052ee92.js"></script></head>
+</head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
-    <div class="container mx-auto px-4 py-6 max-w-6xl">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="fixed inset-0 bg-gradient-to-br from-industrial-dark via-industrial-steel to-black flex items-center justify-center z-50">
+        <div class="bg-industrial-steel border-2 border-industrial-orange rounded-2xl p-8 shadow-2xl max-w-md w-full mx-4">
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4">⚡</div>
+                <h1 class="text-3xl font-bold text-white mb-2">WORKOUT TIMER PRO</h1>
+                <p class="text-orange-300 font-medium">ENTER CODE TO ACCESS TRAINING</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="passwordInput" class="block text-sm font-bold mb-2 text-orange-300">ACCESS CODE</label>
+                    <input type="password" id="passwordInput" 
+                           class="w-full px-4 py-3 text-base border-2 border-industrial-orange rounded-lg bg-industrial-dark text-white focus:ring-2 focus:ring-industrial-yellow focus:border-industrial-yellow font-mono"
+                           placeholder="••••••••••••">
+                </div>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-industrial-orange to-industrial-yellow text-black py-3 rounded-lg font-bold transition-all transform hover:scale-105 hover:shadow-lg">
+                    ⚡ UNLOCK SYSTEM
+                </button>
+                
+                <div id="loginError" class="hidden text-red-400 text-sm text-center bg-red-900/30 border border-red-600 p-3 rounded-lg">
+                    ⚠️ ACCESS DENIED. TRY AGAIN.
+                </div>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <div class="text-xs text-orange-500 font-medium">
+                    🔒 SECURED TRAINING ACCESS SYSTEM
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainApp" class="hidden">
+        <!-- Logout Button -->
+        <div class="fixed top-4 right-4 z-40">
+            <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all transform hover:scale-105">
+                🔒 Logout
+            </button>
+        </div>
+        
+        <div class="container mx-auto px-4 py-6 max-w-6xl">
         <!-- Header -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-center mb-2">Workout Timer Pro</h1>
@@ -185,8 +234,11 @@
                         <!-- Circular Progress Timer -->
                         <div class="relative mx-auto mb-6" style="width: 200px; height: 200px;">
                             <svg class="progress-ring w-full h-full">
-                                <circle cx="100" cy="100" r="90" fill="transparent" stroke="currentColor" stroke-width="4" class="text-gray-300 dark:text-gray-600"></circle>
-                                <circle cx="100" cy="100" r="90" fill="transparent" stroke="currentColor" stroke-width="6" class="text-primary progress-ring-circle" stroke-dasharray="565.48" stroke-dashoffset="565.48" id="progressCircle"></circle>
+                                <circle cx="100" cy="100" r="90" fill="transparent" stroke="currentColor" 
+                                        stroke-width="4" class="text-gray-300 dark:text-gray-600"></circle>
+                                <circle cx="100" cy="100" r="90" fill="transparent" stroke="currentColor" 
+                                        stroke-width="6" class="text-primary progress-ring-circle" 
+                                        stroke-dasharray="565.48" stroke-dashoffset="565.48" id="progressCircle"></circle>
                             </svg>
                             <div class="absolute inset-0 flex items-center justify-center">
                                 <div class="text-center">
@@ -245,17 +297,21 @@
                     <!-- Add Exercise Form -->
                     <div class="space-y-4 mb-6">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <input type="text" id="exerciseTitle" placeholder="Exercise name" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <input type="number" id="exerciseReps" placeholder="Reps" min="1" value="3" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="text" id="exerciseTitle" placeholder="Exercise name" 
+                                   class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="number" id="exerciseReps" placeholder="Reps" min="1" value="3"
+                                   class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium mb-2">Work Time (seconds)</label>
-                                <input type="number" id="workTime" value="45" min="1" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <input type="number" id="workTime" value="45" min="1"
+                                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">Rest Time (seconds)</label>
-                                <input type="number" id="restTime" value="105" min="0" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <input type="number" id="restTime" value="105" min="0"
+                                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
                             </div>
                         </div>
                         <button id="addExerciseBtn" class="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-lg font-semibold transition-all">
@@ -340,8 +396,11 @@
             <div class="relative mb-8 floating-animation">
                 <div class="big-progress relative">
                     <svg class="progress-ring w-full h-full">
-                        <circle cx="200" cy="200" r="180" fill="transparent" stroke="rgba(255,255,255,0.2)" stroke-width="8"></circle>
-                        <circle cx="200" cy="200" r="180" fill="transparent" stroke="white" stroke-width="12" class="progress-ring-circle" stroke-dasharray="1130.97" stroke-dashoffset="1130.97" id="dashProgressCircle"></circle>
+                        <circle cx="200" cy="200" r="180" fill="transparent" stroke="rgba(255,255,255,0.2)" 
+                                stroke-width="8"></circle>
+                        <circle cx="200" cy="200" r="180" fill="transparent" stroke="white" 
+                                stroke-width="12" class="progress-ring-circle" 
+                                stroke-dasharray="1130.97" stroke-dashoffset="1130.97" id="dashProgressCircle"></circle>
                     </svg>
                     <div class="absolute inset-0 flex items-center justify-center">
                         <div class="text-center">
@@ -1342,6 +1401,63 @@
             draggedIndex = -1;
         }
 
+        // Password protection variables
+        var isLoggedIn = false;
+        var correctPassword = "WorkNow2025";
+
+        // Login functionality
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            var passwordInput = document.getElementById('passwordInput');
+            var loginError = document.getElementById('loginError');
+            var enteredPassword = passwordInput.value;
+            
+            if (enteredPassword === correctPassword) {
+                // Successful login
+                isLoggedIn = true;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').classList.remove('hidden');
+                
+                // Clear password field
+                passwordInput.value = '';
+                loginError.classList.add('hidden');
+            } else {
+                // Failed login
+                loginError.classList.remove('hidden');
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // Shake animation for error
+                passwordInput.style.animation = 'shake 0.5s';
+                setTimeout(function() {
+                    passwordInput.style.animation = '';
+                }, 500);
+            }
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainApp').classList.add('hidden');
+            
+            // Reset any running workout
+            if (isRunning || isPaused) {
+                resetWorkout();
+            }
+            
+            // Focus password field
+            setTimeout(function() {
+                document.getElementById('passwordInput').focus();
+            }, 100);
+        }
+
+        // Add shake animation CSS
+        var shakeCSS = '@keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }';
+        var style = document.createElement('style');
+        style.textContent = shakeCSS;
+        document.head.appendChild(style);
+
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initializeAudio();
@@ -1358,6 +1474,10 @@
             document.getElementById('loadWorkoutBtn').addEventListener('click', loadWorkout);
             document.getElementById('fileInput').addEventListener('change', handleFileLoad);
             document.getElementById('dragModeBtn').addEventListener('click', toggleDragMode);
+            
+            // Password functionality
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
             
             // Dashboard buttons
             document.getElementById('dashStartBtn').addEventListener('click', startWorkout);
@@ -1392,8 +1512,10 @@
             updateDisplay();
             updateDashboard();
             updateTimeline();
+            
+            // Focus password field on load
+            document.getElementById('passwordInput').focus();
         });
     </script>
-
-
-</body></html>
+</body>
+</html>
