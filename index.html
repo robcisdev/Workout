@@ -108,7 +108,11 @@
             to { box-shadow: 0 0 40px rgba(255, 140, 0, 0.8); }
         }
         
-        @media (max-width: 768px) {
+        /* Enhanced responsive design for dashboard */
+        @media (max-height: 800px) {
+            .dashboard-mode .floating-animation h1 {
+                font-size: 3.5rem !important;
+            }
             .big-timer {
                 font-size: 4rem;
             }
@@ -116,6 +120,240 @@
                 width: 280px;
                 height: 280px;
             }
+            .dashboard-mode .mb-8 {
+                margin-bottom: 1.5rem !important;
+            }
+            .dashboard-mode .mb-6 {
+                margin-bottom: 1rem !important;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .dashboard-mode .floating-animation h1 {
+                font-size: 2.5rem !important;
+            }
+            .dashboard-mode .floating-animation .text-2xl {
+                font-size: 1.25rem !important;
+            }
+            .dashboard-mode .floating-animation .text-3xl {
+                font-size: 1.5rem !important;
+            }
+            .big-timer {
+                font-size: 3rem;
+            }
+            .big-progress {
+                width: 220px;
+                height: 220px;
+            }
+            .dashboard-mode .mb-8 {
+                margin-bottom: 1rem !important;
+            }
+            .dashboard-mode .mb-6 {
+                margin-bottom: 0.75rem !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .big-timer {
+                font-size: 3rem;
+                line-height: 1;
+            }
+            .big-progress {
+                width: 250px;
+                height: 250px;
+            }
+            .dashboard-mode .floating-animation h1 {
+                font-size: 3rem !important;
+            }
+            .dashboard-mode .floating-animation .text-2xl {
+                font-size: 1.25rem !important;
+            }
+            .dashboard-mode .floating-animation .text-3xl {
+                font-size: 1.5rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .big-timer {
+                font-size: 2.5rem;
+            }
+            .big-progress {
+                width: 200px;
+                height: 200px;
+            }
+            .dashboard-mode .floating-animation h1 {
+                font-size: 2.5rem !important;
+            }
+            .dashboard-mode .floating-animation .text-2xl {
+                font-size: 1rem !important;
+            }
+            .dashboard-mode .floating-animation .text-3xl {
+                font-size: 1.25rem !important;
+            }
+            .dashboard-mode .flex-wrap {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .dashboard-mode .flex-wrap button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Landscape phone specific */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .dashboard-mode .floating-animation h1 {
+                font-size: 2rem !important;
+            }
+            .dashboard-mode .floating-animation .text-2xl {
+                font-size: 1rem !important;
+            }
+            .dashboard-mode .floating-animation .text-3xl {
+                font-size: 1.125rem !important;
+            }
+            .big-timer {
+                font-size: 2rem;
+            }
+            .big-progress {
+                width: 160px;
+                height: 160px;
+            }
+            .dashboard-mode .mb-8 {
+                margin-bottom: 0.5rem !important;
+            }
+            .dashboard-mode .mb-6 {
+                margin-bottom: 0.5rem !important;
+            }
+            .dashboard-mode .grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+            .dashboard-mode .grid > div {
+                padding: 0.5rem !important;
+            }
+        }
+
+        /* Rep Progress Squares */
+        .rep-square {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            margin: 2px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+        }
+
+        .rep-square.completed {
+            background: linear-gradient(135deg, #FF8C00, #FFB300);
+            box-shadow: 0 0 8px rgba(255, 140, 0, 0.5);
+        }
+
+        .rep-square.current {
+            background: linear-gradient(135deg, #FFB300, #FFD700);
+            animation: pulse-rep 1s infinite;
+            box-shadow: 0 0 12px rgba(255, 179, 0, 0.7);
+        }
+
+        .rep-square.remaining {
+            background: rgba(255, 140, 0, 0.15);
+            border: 1px solid rgba(255, 140, 0, 0.3);
+        }
+
+        @keyframes pulse-rep {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .exercise-progress {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1px;
+            padding: 8px;
+            background: rgba(255, 140, 0, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 140, 0, 0.2);
+        }
+
+        /* Enhanced Progress Bar with Squares */
+        .progress-bar-container {
+            position: relative;
+            width: 100%;
+            height: 24px;
+            background: #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .dark .progress-bar-container {
+            background: #374151;
+        }
+
+        .progress-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #FF8C00, #FFB300);
+            border-radius: 12px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-squares {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px;
+            width: calc(100% - 4px);
+        }
+
+        .progress-round-square {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            flex: 0 0 8px;
+        }
+
+        .progress-round-square.completed {
+            background: #FFFFFF;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+        }
+
+        .progress-round-square.current {
+            background: #FFD700;
+            animation: pulse-progress 1s infinite;
+            box-shadow: 0 0 6px rgba(255, 215, 0, 0.8);
+        }
+
+        .progress-round-square.remaining {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes pulse-progress {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        /* Dashboard Progress Squares */
+        .dash-progress-squares {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px;
+            width: calc(100% - 4px);
         }
         
         /* Drag and Drop Styles */
@@ -248,6 +486,12 @@
                             </div>
                         </div>
 
+                        <!-- Rep Progress Visualization -->
+                        <div class="mb-6" id="repProgressContainer" style="display: none;">
+                            <h3 class="text-sm font-medium text-center mb-3 text-gray-600 dark:text-gray-400">Rep Progress</h3>
+                            <div class="exercise-progress" id="repProgressSquares"></div>
+                        </div>
+
                         <!-- Control Buttons -->
                         <div class="flex justify-center space-x-4">
                             <button id="startBtn" class="bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-full font-semibold transition-all transform hover:scale-105">
@@ -277,8 +521,9 @@
                             <span>Overall Progress</span>
                             <span id="overallProgress">0%</span>
                         </div>
-                        <div class="w-full bg-gray-300 dark:bg-gray-600 rounded-full h-3">
-                            <div class="bg-primary h-3 rounded-full transition-all duration-300" style="width: 0%" id="overallProgressBar"></div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="overallProgressBar" style="width: 0%"></div>
+                            <div class="progress-squares" id="overallProgressSquares"></div>
                         </div>
                         <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
                             <span id="timeElapsed">00:00</span>
@@ -392,10 +637,26 @@
                 </div>
             </div>
 
+            <!-- Overall Progress Bar - Top Position -->
+            <div class="w-full max-w-2xl mb-8">
+                <div class="flex justify-between items-center text-lg text-white/80 mb-2">
+                    <span>Overall Progress</span>
+                    <span id="dashOverallProgressTop" class="text-4xl md:text-5xl font-bold text-orange-300">0%</span>
+                </div>
+                <div class="progress-bar-container" style="background: rgba(255,255,255,0.2); height: 28px;">
+                    <div class="bg-white h-full rounded-full transition-all duration-300" style="width: 0%" id="dashOverallProgressBarTop"></div>
+                    <div class="dash-progress-squares" id="dashOverallProgressSquaresTop"></div>
+                </div>
+                <div class="flex justify-between text-sm text-white/60 mt-2">
+                    <span id="dashTimeElapsedTop">00:00</span>
+                    <span id="dashTimeRemainingTop">00:00</span>
+                </div>
+            </div>
+
             <!-- Big Timer Circle -->
             <div class="relative mb-8 floating-animation">
                 <div class="big-progress relative">
-                    <svg class="progress-ring w-full h-full">
+                    <svg class="progress-ring w-full h-full" viewBox="0 0 400 400">
                         <circle cx="200" cy="200" r="180" fill="transparent" stroke="rgba(255,255,255,0.2)" 
                                 stroke-width="8"></circle>
                         <circle cx="200" cy="200" r="180" fill="transparent" stroke="white" 
@@ -408,6 +669,34 @@
                             <div class="text-2xl md:text-3xl text-white/70 mt-4" id="dashTimerLabel">Ready</div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Rep Progress -->
+            <div class="text-center mb-6" id="dashRepProgressContainer" style="display: none;">
+                <div class="text-lg text-white/60 mb-3">Rep Progress</div>
+                <div class="flex justify-center">
+                    <div class="exercise-progress bg-white/10 border-white/20" id="dashRepProgressSquares"></div>
+                </div>
+            </div>
+
+            <!-- Real-time KPIs -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="dashKPIs" style="display: none;">
+                <div class="bg-white/10 rounded-lg p-4 text-center border border-white/20">
+                    <div class="text-2xl font-bold text-orange-300" id="totalRepsCompleted">0</div>
+                    <div class="text-sm text-white/70">Reps Done</div>
+                </div>
+                <div class="bg-white/10 rounded-lg p-4 text-center border border-white/20">
+                    <div class="text-2xl font-bold text-orange-300" id="avgRepTime">0:00</div>
+                    <div class="text-sm text-white/70">Avg Rep</div>
+                </div>
+                <div class="bg-white/10 rounded-lg p-4 text-center border border-white/20">
+                    <div class="text-2xl font-bold text-orange-300" id="workoutIntensity">0%</div>
+                    <div class="text-sm text-white/70">Intensity</div>
+                </div>
+                <div class="bg-white/10 rounded-lg p-4 text-center border border-white/20">
+                    <div class="text-2xl font-bold text-orange-300" id="caloriesBurned">0</div>
+                    <div class="text-sm text-white/70">Calories</div>
                 </div>
             </div>
 
@@ -433,12 +722,13 @@
 
             <!-- Overall Progress Bar -->
             <div class="w-full max-w-2xl mt-8">
-                <div class="flex justify-between text-lg text-white/80 mb-2">
+                <div class="flex justify-between items-center text-lg text-white/80 mb-2">
                     <span>Overall Progress</span>
-                    <span id="dashOverallProgress">0%</span>
+                    <span id="dashOverallProgress" class="text-3xl md:text-4xl font-bold text-orange-300">0%</span>
                 </div>
-                <div class="w-full bg-white/20 rounded-full h-4">
+                <div class="progress-bar-container" style="background: rgba(255,255,255,0.2);">
                     <div class="bg-white h-4 rounded-full transition-all duration-300" style="width: 0%" id="dashOverallProgressBar"></div>
+                    <div class="dash-progress-squares" id="dashOverallProgressSquares"></div>
                 </div>
                 <div class="flex justify-between text-sm text-white/60 mt-2">
                     <span id="dashTimeElapsed">00:00</span>
@@ -767,6 +1057,7 @@
                 document.getElementById('currentPhase').textContent = 'Ready';
                 document.getElementById('timerDisplay').textContent = '00:00';
                 document.getElementById('timerLabel').textContent = 'Ready';
+                document.getElementById('repProgressContainer').style.display = 'none';
                 return;
             }
 
@@ -778,9 +1069,13 @@
                 document.getElementById('currentPhase').textContent = isWorkPhase ? 'WORK' : 'REST';
                 document.getElementById('timerLabel').textContent = isWorkPhase ? 'Work Time' : 'Rest Time';
                 
-                // Update circular progress
+                // Show and update rep progress
+                document.getElementById('repProgressContainer').style.display = 'block';
+                updateRepProgress();
+                
+                // Update circular progress (countdown style - starts full, empties as time runs out)
                 var totalTime = isWorkPhase ? currentExercise.workTime : currentExercise.restTime;
-                var progress = ((totalTime - timeRemaining) / totalTime) * 100;
+                var progress = (timeRemaining / totalTime) * 100; // Countdown: full to empty
                 var circumference = 2 * Math.PI * 90;
                 var offset = circumference - (progress / 100 * circumference);
                 document.getElementById('progressCircle').style.strokeDashoffset = offset;
@@ -792,6 +1087,8 @@
                 } else {
                     timerDisplay.classList.remove('pulse-animation');
                 }
+            } else {
+                document.getElementById('repProgressContainer').style.display = 'none';
             }
             
             document.getElementById('timerDisplay').textContent = formatTime(timeRemaining);
@@ -799,13 +1096,108 @@
             updateSkipButton();
         }
 
+        function updateRepProgress() {
+            if (exercises.length === 0 || !isRunning) return;
+            
+            var currentExercise = exercises[currentExerciseIndex];
+            var container = document.getElementById('repProgressSquares');
+            
+            var html = '';
+            for (var i = 0; i < currentExercise.reps; i++) {
+                var squareClass = 'rep-square ';
+                
+                if (i < currentRep) {
+                    // Completed reps
+                    squareClass += 'completed';
+                } else if (i === currentRep) {
+                    // Current rep
+                    squareClass += 'current';
+                } else {
+                    // Remaining reps
+                    squareClass += 'remaining';
+                }
+                
+                html += '<div class="' + squareClass + '" title="Rep ' + (i + 1) + '"></div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
         function updateTimeDisplay() {
             var overallProgress = totalWorkoutTime > 0 ? (elapsedTime / totalWorkoutTime) * 100 : 0;
             document.getElementById('overallProgress').textContent = Math.round(overallProgress) + '%';
             document.getElementById('overallProgressBar').style.width = overallProgress + '%';
             
+            // Update progress squares
+            updateOverallProgressSquares();
+            
             document.getElementById('timeElapsed').textContent = formatTime(elapsedTime);
             document.getElementById('timeRemaining').textContent = formatTime(Math.max(0, totalWorkoutTime - elapsedTime));
+        }
+
+        function updateOverallProgressSquares() {
+            if (exercises.length === 0) return;
+            
+            // Calculate total rounds
+            var totalRounds = 0;
+            for (var i = 0; i < exercises.length; i++) {
+                totalRounds += exercises[i].reps;
+            }
+            
+            // Calculate current round position
+            var currentRoundIndex = 0;
+            for (var i = 0; i < currentExerciseIndex; i++) {
+                currentRoundIndex += exercises[i].reps;
+            }
+            currentRoundIndex += currentRep;
+            
+            // Generate squares for both main and dashboard
+            var squareHtml = '';
+            for (var i = 0; i < totalRounds; i++) {
+                var squareClass = 'progress-round-square ';
+                
+                if (i < currentRoundIndex) {
+                    // Completed rounds
+                    squareClass += 'completed';
+                } else if (i === currentRoundIndex && isRunning) {
+                    // Current round
+                    squareClass += 'current';
+                } else {
+                    // Remaining rounds
+                    squareClass += 'remaining';
+                }
+                
+                var exerciseInfo = getRoundExerciseInfo(i);
+                var tooltipText = exerciseInfo.title + ' - Rep ' + (exerciseInfo.repNumber + 1);
+                
+                squareHtml += '<div class="' + squareClass + '" title="' + tooltipText + '"></div>';
+            }
+            
+            // Update all progress containers
+            var mainContainer = document.getElementById('overallProgressSquares');
+            var dashContainer = document.getElementById('dashOverallProgressSquares');
+            var dashTopContainer = document.getElementById('dashOverallProgressSquaresTop');
+            
+            if (mainContainer) mainContainer.innerHTML = squareHtml;
+            if (dashContainer) dashContainer.innerHTML = squareHtml;
+            if (dashTopContainer) dashTopContainer.innerHTML = squareHtml;
+        }
+
+        function getRoundExerciseInfo(roundIndex) {
+            var currentRound = 0;
+            
+            for (var i = 0; i < exercises.length; i++) {
+                var exercise = exercises[i];
+                if (roundIndex < currentRound + exercise.reps) {
+                    return {
+                        title: exercise.title,
+                        repNumber: roundIndex - currentRound
+                    };
+                }
+                currentRound += exercise.reps;
+            }
+            
+            return { title: 'Unknown', repNumber: 0 };
         }
 
         function formatTime(seconds) {
@@ -941,6 +1333,8 @@
                 document.getElementById('dashTimerDisplay').textContent = '00:00';
                 document.getElementById('dashTimerLabel').textContent = 'Ready';
                 document.getElementById('nextExerciseSection').style.display = 'none';
+                document.getElementById('dashRepProgressContainer').style.display = 'none';
+                document.getElementById('dashKPIs').style.display = 'none';
                 return;
             }
 
@@ -951,6 +1345,14 @@
                 document.getElementById('dashCurrentRep').textContent = 'Rep ' + (currentRep + 1) + ' of ' + currentExercise.reps;
                 document.getElementById('dashCurrentPhase').textContent = isWorkPhase ? 'WORK' : 'REST';
                 document.getElementById('dashTimerLabel').textContent = isWorkPhase ? 'Work Time' : 'Rest Time';
+                
+                // Show and update dashboard rep progress
+                document.getElementById('dashRepProgressContainer').style.display = 'block';
+                updateDashboardRepProgress();
+                
+                // Show and update real-time KPIs
+                document.getElementById('dashKPIs').style.display = 'grid';
+                updateRealTimeKPIs();
                 
                 // Update next exercise preview
                 var nextExerciseIndex = currentExerciseIndex;
@@ -980,9 +1382,9 @@
                     nextExerciseSection.style.display = 'none';
                 }
                 
-                // Update big circular progress
+                // Update big circular progress (countdown style - starts full, empties as time runs out)
                 var totalTime = isWorkPhase ? currentExercise.workTime : currentExercise.restTime;
-                var progress = ((totalTime - timeRemaining) / totalTime) * 100;
+                var progress = (timeRemaining / totalTime) * 100; // Countdown: full to empty
                 var circumference = 2 * Math.PI * 180;
                 var offset = circumference - (progress / 100 * circumference);
                 document.getElementById('dashProgressCircle').style.strokeDashoffset = offset;
@@ -1004,6 +1406,8 @@
                 document.getElementById('dashCurrentPhase').textContent = 'Ready';
                 document.getElementById('dashTimerLabel').textContent = 'Ready';
                 document.getElementById('nextExerciseSection').style.display = 'none';
+                document.getElementById('dashRepProgressContainer').style.display = 'none';
+                document.getElementById('dashKPIs').style.display = 'none';
                 
                 document.getElementById('dashStartBtn').style.display = 'inline-block';
                 document.getElementById('dashPauseBtn').style.display = 'none';
@@ -1011,13 +1415,88 @@
             
             document.getElementById('dashTimerDisplay').textContent = formatTime(timeRemaining);
             
-            // Update overall progress in dashboard
+            // Update overall progress in dashboard (both top and bottom)
             var overallProgress = totalWorkoutTime > 0 ? (elapsedTime / totalWorkoutTime) * 100 : 0;
             document.getElementById('dashOverallProgress').textContent = Math.round(overallProgress) + '%';
             document.getElementById('dashOverallProgressBar').style.width = overallProgress + '%';
             
+            // Update top progress bar
+            document.getElementById('dashOverallProgressTop').textContent = Math.round(overallProgress) + '%';
+            document.getElementById('dashOverallProgressBarTop').style.width = overallProgress + '%';
+            
             document.getElementById('dashTimeElapsed').textContent = formatTime(elapsedTime);
             document.getElementById('dashTimeRemaining').textContent = formatTime(Math.max(0, totalWorkoutTime - elapsedTime));
+            
+            // Update top time displays
+            document.getElementById('dashTimeElapsedTop').textContent = formatTime(elapsedTime);
+            document.getElementById('dashTimeRemainingTop').textContent = formatTime(Math.max(0, totalWorkoutTime - elapsedTime));
+        }
+
+        function updateDashboardRepProgress() {
+            if (exercises.length === 0 || !isRunning) return;
+            
+            var currentExercise = exercises[currentExerciseIndex];
+            var container = document.getElementById('dashRepProgressSquares');
+            
+            var html = '';
+            for (var i = 0; i < currentExercise.reps; i++) {
+                var squareClass = 'rep-square ';
+                
+                if (i < currentRep) {
+                    // Completed reps
+                    squareClass += 'completed';
+                } else if (i === currentRep) {
+                    // Current rep
+                    squareClass += 'current';
+                } else {
+                    // Remaining reps
+                    squareClass += 'remaining';
+                }
+                
+                html += '<div class="' + squareClass + '" title="Rep ' + (i + 1) + '"></div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function updateRealTimeKPIs() {
+            if (!isRunning) return;
+            
+            // Calculate total reps completed across all exercises
+            var totalRepsCompleted = 0;
+            for (var i = 0; i < currentExerciseIndex; i++) {
+                totalRepsCompleted += exercises[i].reps;
+            }
+            totalRepsCompleted += currentRep;
+            if (!isWorkPhase && currentRep < exercises[currentExerciseIndex].reps) {
+                totalRepsCompleted++; // Count current rep as completed during rest
+            }
+            
+            // Calculate average rep time (work + rest time per rep)
+            var avgRepTimeSeconds = 0;
+            if (totalRepsCompleted > 0) {
+                avgRepTimeSeconds = Math.floor(elapsedTime / totalRepsCompleted);
+            }
+            
+            // Calculate workout intensity (% of time spent working vs resting)
+            var totalWorkTime = 0;
+            var totalRestTime = 0;
+            for (var i = 0; i < exercises.length; i++) {
+                var exercise = exercises[i];
+                totalWorkTime += exercise.reps * exercise.workTime;
+                totalRestTime += exercise.reps * exercise.restTime;
+            }
+            var workIntensity = totalWorkTime > 0 ? Math.round((totalWorkTime / (totalWorkTime + totalRestTime)) * 100) : 0;
+            
+            // Calculate calories burned (basic estimation: 5-12 calories per minute depending on intensity)
+            var caloriesPerMinute = workIntensity > 70 ? 12 : (workIntensity > 50 ? 8 : 5);
+            var caloriesBurned = Math.round((elapsedTime / 60) * caloriesPerMinute);
+            
+            // Update KPI displays
+            document.getElementById('totalRepsCompleted').textContent = totalRepsCompleted;
+            document.getElementById('avgRepTime').textContent = formatTime(avgRepTimeSeconds);
+            document.getElementById('workoutIntensity').textContent = workIntensity + '%';
+            document.getElementById('caloriesBurned').textContent = caloriesBurned;
         }
 
         function skipRest() {
