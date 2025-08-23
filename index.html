@@ -622,117 +622,115 @@
 
     <!-- Fullscreen Dashboard Mode -->
     <div id="dashboardMode" class="dashboard-mode text-white">
-        <div class="flex flex-col items-center justify-center w-full h-full p-8">
+        <div class="flex flex-col w-full h-full">
             <!-- Close Button -->
-            <button id="closeDashboard" class="absolute top-6 right-6 text-white text-2xl hover:text-gray-300 transition-colors">
+            <button id="closeDashboard" class="absolute top-6 right-6 text-white text-3xl hover:text-gray-300 transition-colors z-10">
                 ✕
             </button>
             
-            <!-- Current Exercise Section -->
-            <div class="text-center mb-8 floating-animation">
-                <div class="mb-4">
-                    <h1 class="text-6xl md:text-7xl font-bold mb-2" id="dashCurrentExercise">Ready to Start</h1>
-                    <div class="text-2xl md:text-3xl text-white/80 mb-2" id="dashCurrentRep">Rep 0 of 0</div>
-                    <div class="text-3xl md:text-4xl font-semibold glow-animation" id="dashCurrentPhase">Ready</div>
-                </div>
-            </div>
-
-            <!-- Overall Progress Bar - Top Position -->
-            <div class="w-full max-w-2xl mb-8">
-                <div class="flex justify-between items-center text-lg text-white/80 mb-2">
-                    <span>Overall Progress</span>
-                    <span id="dashOverallProgressTop" class="text-4xl md:text-5xl font-bold text-orange-300">0%</span>
-                </div>
-                <div class="progress-bar-container" style="background: rgba(255,255,255,0.2); height: 28px;">
-                    <div class="bg-white h-full rounded-full transition-all duration-300" style="width: 0%" id="dashOverallProgressBarTop"></div>
-                    <div class="dash-progress-squares" id="dashOverallProgressSquaresTop"></div>
-                </div>
-                <div class="flex justify-between text-sm text-white/60 mt-2">
-                    <span id="dashTimeElapsedTop">00:00</span>
-                    <span id="dashTimeRemainingTop">00:00</span>
-                </div>
-            </div>
-
-            <!-- Big Timer Circle -->
-            <div class="relative mb-8 floating-animation">
-                <div class="big-progress relative">
-                    <svg class="progress-ring w-full h-full" viewBox="0 0 400 400">
-                        <circle cx="200" cy="200" r="180" fill="transparent" stroke="rgba(255,255,255,0.2)" 
-                                stroke-width="8"></circle>
-                        <circle cx="200" cy="200" r="180" fill="transparent" stroke="white" 
-                                stroke-width="12" class="progress-ring-circle" 
-                                stroke-dasharray="1130.97" stroke-dashoffset="1130.97" id="dashProgressCircle"></circle>
-                    </svg>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="timer-display big-timer font-bold" id="dashTimerDisplay">00:00</div>
-                            <div class="text-2xl md:text-3xl text-white/70 mt-4" id="dashTimerLabel">Ready</div>
-                        </div>
+            <!-- Top Section: Overall Progress -->
+            <div class="flex-shrink-0 w-full px-8 pt-6 pb-4">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex justify-between items-center text-2xl text-white/80 mb-3">
+                        <span class="font-semibold">Overall Progress</span>
+                        <span id="dashOverallProgressTop" class="text-5xl md:text-6xl font-bold text-orange-300">0%</span>
+                    </div>
+                    <div class="progress-bar-container" style="background: rgba(255,255,255,0.2); height: 32px;">
+                        <div class="bg-white h-full rounded-full transition-all duration-300" style="width: 0%" id="dashOverallProgressBarTop"></div>
+                        <div class="dash-progress-squares" id="dashOverallProgressSquaresTop"></div>
+                    </div>
+                    <div class="flex justify-between text-lg text-white/60 mt-3">
+                        <span id="dashTimeElapsedTop">00:00</span>
+                        <span id="dashTimeRemainingTop">00:00</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Dashboard Rep Progress -->
-            <div class="text-center mb-6" id="dashRepProgressContainer" style="display: none;">
-                <div class="text-lg text-white/60 mb-3">Rep Progress</div>
-                <div class="flex justify-center">
-                    <div class="exercise-progress bg-white/10 border-white/20" id="dashRepProgressSquares"></div>
+            <!-- Main Content Area -->
+            <div class="flex-1 flex flex-col lg:flex-row items-center justify-center px-8 py-4 gap-8">
+                <!-- Left Column: Exercise Info & Timer -->
+                <div class="flex flex-col items-center justify-center lg:w-1/2">
+                    <!-- Current Exercise Section -->
+                    <div class="text-center mb-6 floating-animation">
+                        <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-3" id="dashCurrentExercise">Ready to Start</h1>
+                        <div class="text-xl md:text-2xl lg:text-3xl text-white/80 mb-2" id="dashCurrentRep">Rep 0 of 0</div>
+                        <div class="text-2xl md:text-3xl lg:text-4xl font-semibold glow-animation" id="dashCurrentPhase">Ready</div>
+                    </div>
+
+                    <!-- Big Timer Circle -->
+                    <div class="relative mb-6 floating-animation">
+                        <div class="big-progress relative">
+                            <svg class="progress-ring w-full h-full" viewBox="0 0 400 400">
+                                <circle cx="200" cy="200" r="180" fill="transparent" stroke="rgba(255,255,255,0.2)" 
+                                        stroke-width="8"></circle>
+                                <circle cx="200" cy="200" r="180" fill="transparent" stroke="white" 
+                                        stroke-width="12" class="progress-ring-circle" 
+                                        stroke-dasharray="1130.97" stroke-dashoffset="1130.97" id="dashProgressCircle"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="timer-display big-timer font-bold" id="dashTimerDisplay">00:00</div>
+                                    <div class="text-xl md:text-2xl lg:text-3xl text-white/70 mt-4" id="dashTimerLabel">Ready</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Rep Progress -->
+                    <div class="text-center mb-6" id="dashRepProgressContainer" style="display: none;">
+                        <div class="text-xl text-white/60 mb-4">Rep Progress</div>
+                        <div class="flex justify-center">
+                            <div class="exercise-progress bg-white/10 border-white/20" id="dashRepProgressSquares"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: KPIs & Next Exercise -->
+                <div class="flex flex-col items-center justify-center lg:w-1/2">
+                    <!-- Real-time KPIs -->
+                    <div class="grid grid-cols-2 gap-6 mb-8 w-full max-w-lg" id="dashKPIs" style="display: none;">
+                        <div class="bg-white/10 rounded-xl p-6 text-center border border-white/20 backdrop-blur-sm">
+                            <div class="text-4xl md:text-5xl font-bold text-orange-300 mb-2" id="totalRepsCompleted">0</div>
+                            <div class="text-lg text-white/70">Reps Done</div>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-6 text-center border border-white/20 backdrop-blur-sm">
+                            <div class="text-4xl md:text-5xl font-bold text-orange-300 mb-2" id="avgRepTime">0:00</div>
+                            <div class="text-lg text-white/70">Avg Rep</div>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-6 text-center border border-white/20 backdrop-blur-sm">
+                            <div class="text-4xl md:text-5xl font-bold text-orange-300 mb-2" id="workoutIntensity">0%</div>
+                            <div class="text-lg text-white/70">Intensity</div>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-6 text-center border border-white/20 backdrop-blur-sm">
+                            <div class="text-4xl md:text-5xl font-bold text-orange-300 mb-2" id="caloriesBurned">0</div>
+                            <div class="text-lg text-white/70">Calories</div>
+                        </div>
+                    </div>
+
+                    <!-- Next Exercise Preview -->
+                    <div class="text-center mb-8 bg-white/10 rounded-xl p-6 backdrop-blur-sm border border-white/20 w-full max-w-lg" id="nextExerciseSection" style="display: none;">
+                        <div class="text-xl text-white/60 mb-3">Up Next:</div>
+                        <div class="text-2xl md:text-3xl lg:text-4xl font-semibold text-white/90 mb-2" id="nextExerciseName">-</div>
+                        <div class="text-lg md:text-xl text-white/70" id="nextExerciseDetails">-</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Real-time KPIs -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="dashKPIs" style="display: none;">
-                <div class="bg-white/10 rounded-lg p-4 text-center border border-white/20">
-                    <div class="text-2xl font-bold text-orange-300" id="totalRepsCompleted">0</div>
-                    <div class="text-sm text-white/70">Reps Done</div>
-                </div>
-                <div class="bg-white/10 rounded-lg p-4 text-center border border-white/20">
-                    <div class="text-2xl font-bold text-orange-300" id="avgRepTime">0:00</div>
-                    <div class="text-sm text-white/70">Avg Rep</div>
-                </div>
-                <div class="bg-white/10 rounded-lg p-4 text-center border border-white/20">
-                    <div class="text-2xl font-bold text-orange-300" id="workoutIntensity">0%</div>
-                    <div class="text-sm text-white/70">Intensity</div>
-                </div>
-                <div class="bg-white/10 rounded-lg p-4 text-center border border-white/20">
-                    <div class="text-2xl font-bold text-orange-300" id="caloriesBurned">0</div>
-                    <div class="text-sm text-white/70">Calories</div>
-                </div>
-            </div>
-
-            <!-- Next Exercise Preview -->
-            <div class="text-center mb-8" id="nextExerciseSection" style="display: none;">
-                <div class="text-lg text-white/60 mb-2">Up Next:</div>
-                <div class="text-2xl md:text-3xl font-semibold text-white/90" id="nextExerciseName">-</div>
-                <div class="text-lg text-white/70" id="nextExerciseDetails">-</div>
-            </div>
-
-            <!-- Dashboard Controls -->
-            <div class="flex flex-wrap justify-center gap-4">
-                <button id="dashStartBtn" class="bg-white text-purple-600 px-8 py-4 rounded-full text-xl font-semibold hover:bg-gray-100 transition-all transform hover:scale-105">
-                    Start Workout
-                </button>
-                <button id="dashPauseBtn" class="bg-gray-600 text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-gray-700 transition-all transform hover:scale-105 hidden">
-                    Pause
-                </button>
-                <button id="dashResetBtn" class="bg-orange-600 text-white px-6 py-4 rounded-full text-xl font-semibold hover:bg-orange-700 transition-all transform hover:scale-105">
-                    Reset Phase
-                </button>
-            </div>
-
-            <!-- Overall Progress Bar -->
-            <div class="w-full max-w-2xl mt-8">
-                <div class="flex justify-between items-center text-lg text-white/80 mb-2">
-                    <span>Overall Progress</span>
-                    <span id="dashOverallProgress" class="text-3xl md:text-4xl font-bold text-orange-300">0%</span>
-                </div>
-                <div class="progress-bar-container" style="background: rgba(255,255,255,0.2);">
-                    <div class="bg-white h-4 rounded-full transition-all duration-300" style="width: 0%" id="dashOverallProgressBar"></div>
-                    <div class="dash-progress-squares" id="dashOverallProgressSquares"></div>
-                </div>
-                <div class="flex justify-between text-sm text-white/60 mt-2">
-                    <span id="dashTimeElapsed">00:00</span>
-                    <span id="dashTimeRemaining">00:00</span>
+            <!-- Bottom Section: Controls -->
+            <div class="flex-shrink-0 w-full px-8 pb-6">
+                <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
+                    <button id="dashStartBtn" class="bg-white text-purple-600 px-10 py-5 rounded-full text-xl md:text-2xl font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
+                        Start Workout
+                    </button>
+                    <button id="dashPauseBtn" class="bg-gray-600 text-white px-10 py-5 rounded-full text-xl md:text-2xl font-semibold hover:bg-gray-700 transition-all transform hover:scale-105 shadow-lg hidden">
+                        Pause
+                    </button>
+                    <button id="dashSkipBtn" class="bg-green-600 text-white px-8 py-5 rounded-full text-xl md:text-2xl font-semibold hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg hidden">
+                        Skip Rest
+                    </button>
+                    <button id="dashResetBtn" class="bg-orange-600 text-white px-8 py-5 rounded-full text-xl md:text-2xl font-semibold hover:bg-orange-700 transition-all transform hover:scale-105 shadow-lg">
+                        Reset Phase
+                    </button>
                 </div>
             </div>
         </div>
@@ -1600,12 +1598,15 @@
 
         function updateSkipButton() {
             var skipBtn = document.getElementById('skipBtn');
+            var dashSkipBtn = document.getElementById('dashSkipBtn');
             
             // Show skip button only during rest periods
             if (isRunning && !isWorkPhase) {
                 skipBtn.style.display = 'inline-block';
+                dashSkipBtn.style.display = 'inline-block';
             } else {
                 skipBtn.style.display = 'none';
+                dashSkipBtn.style.display = 'none';
             }
         }
 
@@ -1961,6 +1962,7 @@
             // Dashboard buttons
             document.getElementById('dashStartBtn').addEventListener('click', startWorkout);
             document.getElementById('dashPauseBtn').addEventListener('click', pauseWorkout);
+            document.getElementById('dashSkipBtn').addEventListener('click', skipRest);
             document.getElementById('dashResetBtn').addEventListener('click', resetCurrentPhase);
             
             // Event delegation for dynamic buttons
