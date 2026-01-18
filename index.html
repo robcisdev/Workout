@@ -454,6 +454,11 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
+            <!-- Current Time Display -->
+            <div class="hidden sm:flex flex-col items-end px-3 py-2 rounded-xl" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                <span class="text-lg font-bold" id="current-time" style="font-family: 'Space Grotesk', monospace;">--:-- --</span>
+                <span class="text-xs" style="color: var(--text-secondary);">Central Time</span>
+            </div>
             <button onclick="exportData()" class="btn-secondary flex items-center gap-2">
                 <i class="fas fa-download"></i>
                 <span class="hidden sm:inline">Export</span>
@@ -1201,6 +1206,9 @@
             setupFormListeners();
             updateDashboard();
             updateLastUpdated();
+            updateCurrentTime();
+            // Update current time every second
+            setInterval(updateCurrentTime, 1000);
             // Update last updated every minute
             setInterval(updateLastUpdated, 60000);
             // Update live timers every second
@@ -1212,6 +1220,46 @@
                 updateLastFeedingDisplay();
             }, 60000);
         });
+
+        function updateCurrentTime() {
+            const now = new Date();
+            // Convert to Central Time
+            const centralTime = now.toLocaleString('en-US', {
+                timeZone: 'America/Chicago',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            document.getElementById('current-time').textContent = centralTime;
+        }
+
+        function parseTimestamp(timestamp) {
+            // Handle various timestamp formats
+            if (!timestamp) {
+                console.warn('parseTimestamp: No timestamp provided, returning current time');
+                return new Date();
+            }
+
+            // If it's already a Date object
+            if (timestamp instanceof Date) return timestamp;
+
+            // Try parsing as ISO string or other formats
+            let parsed = new Date(timestamp);
+
+            // Check if valid date
+            if (isNaN(parsed.getTime())) {
+                // Try parsing as local date/time string (e.g., "2025-01-17 21:25:00")
+                const localParsed = new Date(timestamp.replace(' ', 'T'));
+                if (!isNaN(localParsed.getTime())) {
+                    return localParsed;
+                }
+                console.warn('Invalid timestamp:', timestamp);
+                return new Date();
+            }
+
+            return parsed;
+        }
 
         function updateLiveTimers() {
             const liveTimers = document.querySelectorAll('.live-timer');
@@ -1242,7 +1290,7 @@
             if (!record) return;
 
             const now = new Date();
-            const startTime = new Date(record.timestamp);
+            const startTime = parseTimestamp(record.timestamp);
             const diffMs = now - startTime;
             const diffMins = Math.round(diffMs / (1000 * 60));
 
@@ -1267,16 +1315,25 @@
             }
 
             // Find the most recent record by timestamp
-            const sortedRecords = [...records].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            const sortedRecords = [...records].sort((a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp));
             const lastRecord = sortedRecords[0];
-            const lastTime = new Date(lastRecord.timestamp);
+            const lastTime = parseTimestamp(lastRecord.timestamp);
             const now = new Date();
             const diffMs = now - lastTime;
             const diffHours = diffMs / (1000 * 60 * 60);
             const diffMins = Math.floor(diffMs / (1000 * 60));
 
             let timeText;
-            if (diffMins < 1) {
+            // Handle negative differences (future dates)
+            if (diffMins < 0) {
+                const absMins = Math.abs(diffMins);
+                const absHours = Math.floor(absMins / 60);
+                if (absHours > 0) {
+                    timeText = `In ${absHours}h ${absMins % 60}m`;
+                } else {
+                    timeText = `In ${absMins}m`;
+                }
+            } else if (diffMins < 1) {
                 timeText = 'Just now';
             } else if (diffMins < 60) {
                 timeText = `${diffMins} min ago`;
@@ -1290,13 +1347,22 @@
 
             text.textContent = `Last updated: ${timeText}`;
 
-            // Color coding: red if more than 3 hours, green otherwise
-            if (diffHours > 3) {
+            // Color coding: orange if future, red if more than 3 hours ago, green otherwise
+            if (diffMins < 0) {
+                dot.className = 'w-2 h-2 rounded-full';
+                dot.style.background = '#f97316';
+                text.className = 'text-sm';
+                text.style.color = '#f97316';
+            } else if (diffHours > 3) {
                 dot.className = 'w-2 h-2 rounded-full dot-red';
+                dot.style.background = '';
                 text.className = 'text-sm status-red';
+                text.style.color = '';
             } else {
                 dot.className = 'w-2 h-2 rounded-full dot-green';
+                dot.style.background = '';
                 text.className = 'text-sm status-green';
+                text.style.color = '';
             }
         }
 
@@ -1420,7 +1486,7 @@
             }
 
             records.unshift(record);
-            records.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            records.sort((a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp));
 
             closeMedicalModal();
             updateDashboard();
@@ -1512,7 +1578,7 @@
                 showToast('Medical record saved!');
             }
 
-            records.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            records.sort((a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp));
             closeMedicalModal();
             updateDashboard();
             filterHistory();
@@ -1630,7 +1696,7 @@
             }
 
             records.unshift(record);
-            records.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            records.sort((a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp));
 
             form.reset();
             initDateTimeFields();
@@ -1685,7 +1751,7 @@
         }
 
         function updateLastFeedingDisplay() {
-            const allFeedings = records.filter(r => r.type === 'feeding').sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            const allFeedings = records.filter(r => r.type === 'feeding').sort((a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp));
             const lastFeedingTimeEl = document.getElementById('last-feeding-time');
             const lastFeedingDetailsEl = document.getElementById('last-feeding-details');
             const lastFeedingAlert = document.getElementById('last-feeding-alert');
@@ -1698,17 +1764,31 @@
             }
 
             const lastFeeding = allFeedings[0];
-            const feedingTime = new Date(lastFeeding.timestamp);
+            const feedingTime = parseTimestamp(lastFeeding.timestamp);
             const now = new Date();
-            const diffMs = now - feedingTime;
+
+            // Calculate difference using UTC milliseconds for accuracy
+            const diffMs = now.getTime() - feedingTime.getTime();
             const diffMins = Math.floor(diffMs / (1000 * 60));
             const diffHours = Math.floor(diffMins / 60);
             const remainingMins = diffMins % 60;
 
+
             let timeText;
             let timeColor;
 
-            if (diffMins < 1) {
+            // Handle negative differences (future dates - likely timezone or date entry issue)
+            if (diffMins < 0) {
+                const absMins = Math.abs(diffMins);
+                const absHours = Math.floor(absMins / 60);
+                const absRemMins = absMins % 60;
+                if (absHours > 0) {
+                    timeText = `${absHours}h ${absRemMins}m (scheduled)`;
+                } else {
+                    timeText = `${absMins}m (scheduled)`;
+                }
+                timeColor = '#f97316'; // orange for future
+            } else if (diffMins < 1) {
                 timeText = 'Just now';
                 timeColor = '#10b981'; // green
             } else if (diffMins < 60) {
@@ -1798,7 +1878,7 @@
                 other: 'Other'
             };
 
-            const dateObj = new Date(record.timestamp);
+            const dateObj = parseTimestamp(record.timestamp);
             const timeStr = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             const dateStr = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 
@@ -1810,7 +1890,16 @@
             const diffDays = Math.floor(diffHours / 24);
 
             let timeAgo;
-            if (diffMins < 1) {
+            // Handle negative differences (future dates)
+            if (diffMins < 0) {
+                const absMins = Math.abs(diffMins);
+                const absHours = Math.floor(absMins / 60);
+                if (absHours > 0) {
+                    timeAgo = `In ${absHours}h ${absMins % 60}m`;
+                } else {
+                    timeAgo = `In ${absMins}m`;
+                }
+            } else if (diffMins < 1) {
                 timeAgo = 'Just now';
             } else if (diffMins < 60) {
                 timeAgo = `${diffMins} min ago`;
@@ -2016,7 +2105,7 @@
             badgeEl.textContent = record.type;
             badgeEl.className = `badge badge-${record.type}`;
 
-            const dateObj = new Date(record.timestamp);
+            const dateObj = parseTimestamp(record.timestamp);
             document.getElementById('edit-datetime').textContent =
                 dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -2087,7 +2176,7 @@
             }
 
             // Re-sort records by timestamp
-            records.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            records.sort((a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp));
 
             closeEditModal();
             updateDashboard();
@@ -2400,7 +2489,7 @@
                     const data = JSON.parse(e.target.result);
                     if (data.records && Array.isArray(data.records)) {
                         records = data.records;
-                        records.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                        records.sort((a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp));
                         // Mark as saved immediately after import (this is the baseline)
                         lastSavedRecordsHash = getRecordsHash();
                         hasUnsavedChanges = false;
