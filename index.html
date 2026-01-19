@@ -422,6 +422,122 @@
         .stagger-2 { animation-delay: 0.2s; opacity: 0; }
         .stagger-3 { animation-delay: 0.3s; opacity: 0; }
         .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+
+        /* Floating Action Bar */
+        .floating-action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 90;
+            padding: 12px 16px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .dark .floating-action-bar {
+            background: linear-gradient(180deg, rgba(26, 34, 53, 0.98), rgba(17, 24, 39, 0.99));
+        }
+
+        .fab-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            font-size: 18px;
+        }
+
+        .fab-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .fab-btn:active {
+            transform: scale(0.95);
+        }
+
+        .fab-btn span {
+            font-size: 9px;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        .fab-btn.feeding { background: linear-gradient(135deg, rgba(255, 107, 157, 0.25), rgba(255, 143, 171, 0.15)); border-color: #ff6b9d; color: #ff6b9d; }
+        .fab-btn.pumping { background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(192, 132, 252, 0.15)); border-color: #a855f7; color: #a855f7; }
+        .fab-btn.wet { background: linear-gradient(135deg, rgba(79, 172, 254, 0.25), rgba(0, 242, 254, 0.15)); border-color: #4facfe; color: #4facfe; }
+        .fab-btn.dirty { background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(251, 191, 36, 0.15)); border-color: #f97316; color: #f97316; }
+        .fab-btn.medical { background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(52, 211, 153, 0.15)); border-color: #10b981; color: #10b981; }
+
+        .fab-stop-btn {
+            height: 52px;
+            padding: 0 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            animation: pulse-stop 1.5s infinite;
+        }
+
+        .fab-stop-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .fab-stop-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes pulse-stop {
+            0%, 100% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(239, 68, 68, 0.6); }
+        }
+
+        .fab-session-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-right: 8px;
+        }
+
+        .fab-session-type {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .fab-session-timer {
+            font-size: 16px;
+            font-weight: 700;
+            color: #10b981;
+            font-family: 'Space Grotesk', monospace;
+        }
+
+        /* Add padding to body to account for floating bar */
+        body {
+            padding-bottom: 90px !important;
+        }
     </style>
 </head>
 <body class="p-4 md:p-6 scrollbar-thin">
@@ -453,12 +569,18 @@
                 </div>
             </div>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3">
             <!-- Current Time Display -->
             <div class="hidden sm:flex flex-col items-end px-3 py-2 rounded-xl" style="background: var(--bg-card); border: 1px solid var(--border-color);">
                 <span class="text-lg font-bold" id="current-time" style="font-family: 'Space Grotesk', monospace;">--:-- --</span>
                 <span class="text-xs" style="color: var(--text-secondary);">Central Time</span>
             </div>
+            <!-- Dark/Light Mode Toggle -->
+            <button onclick="toggleDarkMode()" class="btn-secondary flex items-center justify-center w-10 h-10 sm:w-auto sm:h-auto sm:px-3 sm:py-2" id="theme-toggle" title="Toggle dark/light mode">
+                <i class="fas fa-sun" id="theme-icon-light" style="display: none;"></i>
+                <i class="fas fa-moon" id="theme-icon-dark"></i>
+                <span class="hidden sm:inline ml-2" id="theme-label">Light</span>
+            </button>
             <button onclick="exportData()" class="btn-secondary flex items-center gap-2">
                 <i class="fas fa-download"></i>
                 <span class="hidden sm:inline">Export</span>
@@ -1135,23 +1257,106 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-4 right-4 p-4 rounded-xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3" style="background: var(--accent-green);">
+    <div id="toast" class="fixed bottom-24 right-4 p-4 rounded-xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3" style="background: var(--accent-green);">
         <p class="text-white font-medium" id="toast-message">Record saved!</p>
         <button id="toast-action" class="hidden px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm font-medium transition-colors"></button>
     </div>
 
+    <!-- Floating Action Bar -->
+    <div class="floating-action-bar" id="floating-action-bar">
+        <!-- Active Session Section (hidden when no session) -->
+        <div id="fab-active-session" class="hidden flex items-center">
+            <div class="fab-session-info">
+                <span class="fab-session-type" id="fab-session-type">Feeding</span>
+                <span class="fab-session-timer" id="fab-session-timer">0:00</span>
+            </div>
+            <button class="fab-stop-btn" id="fab-stop-btn" onclick="stopActiveSession()">
+                <i class="fas fa-stop-circle"></i>
+                <span>STOP</span>
+            </button>
+        </div>
+
+        <!-- Divider when session is active -->
+        <div id="fab-divider" class="hidden w-px h-10 mx-2" style="background: var(--border-color);"></div>
+
+        <!-- Quick Action Buttons -->
+        <div class="fab-btn feeding" onclick="quickAdd('feeding')" title="Feed">
+            <i class="fas fa-baby-carriage"></i>
+            <span>Feed</span>
+        </div>
+        <div class="fab-btn pumping" onclick="quickAdd('pumping')" title="Pump">
+            <i class="fas fa-prescription-bottle"></i>
+            <span>Pump</span>
+        </div>
+        <div class="fab-btn wet" onclick="quickAdd('wet')" title="Wet">
+            <i class="fas fa-tint"></i>
+            <span>Wet</span>
+        </div>
+        <div class="fab-btn dirty" onclick="quickAdd('dirty')" title="Dirty">
+            <i class="fas fa-poo"></i>
+            <span>Dirty</span>
+        </div>
+        <div class="fab-btn medical" onclick="openMedicalModal()" title="Medical">
+            <i class="fas fa-notes-medical"></i>
+            <span>Med</span>
+        </div>
+    </div>
+
     <script>
-        // Initialize dark mode
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
-        }
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            if (event.matches) {
+        // Theme management (no localStorage in iframe)
+        let userThemePreference = null; // null = follow system, 'dark' or 'light' = user choice
+
+        function initTheme() {
+            // Default to system preference
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
+            }
+            updateThemeToggleUI();
+        }
+
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            userThemePreference = isDark ? 'dark' : 'light';
+            updateThemeToggleUI();
+            // Update charts with new colors
+            if (typeof updateAnalytics === 'function') {
+                updateAnalytics();
+            }
+        }
+
+        function updateThemeToggleUI() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const iconLight = document.getElementById('theme-icon-light');
+            const iconDark = document.getElementById('theme-icon-dark');
+            const label = document.getElementById('theme-label');
+
+            if (iconLight && iconDark) {
+                if (isDark) {
+                    iconLight.style.display = 'none';
+                    iconDark.style.display = 'inline';
+                    if (label) label.textContent = 'Light';
+                } else {
+                    iconLight.style.display = 'inline';
+                    iconDark.style.display = 'none';
+                    if (label) label.textContent = 'Dark';
+                }
+            }
+        }
+
+        // Listen for system theme changes (only if user hasn't manually toggled)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (userThemePreference === null) {
+                if (event.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                updateThemeToggleUI();
             }
         });
+
+        // Initialize theme on load
+        initTheme();
 
         // Data storage
         let records = [];
@@ -1199,6 +1404,65 @@
             hideUnsavedWarning();
         }
 
+        // Active session tracking for floating action bar
+        let activeSessionId = null;
+
+        function getActiveSession() {
+            // Find the most recent feeding or pumping without duration
+            const activeSessions = records.filter(r =>
+                (r.type === 'feeding' || r.type === 'pumping') && !r.duration
+            );
+            if (activeSessions.length === 0) return null;
+
+            // Sort by timestamp descending and return the most recent
+            activeSessions.sort((a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp));
+            return activeSessions[0];
+        }
+
+        function updateFloatingActionBar() {
+            const session = getActiveSession();
+            const fabSession = document.getElementById('fab-active-session');
+            const fabDivider = document.getElementById('fab-divider');
+            const fabSessionType = document.getElementById('fab-session-type');
+            const fabSessionTimer = document.getElementById('fab-session-timer');
+
+            if (session) {
+                activeSessionId = session.id;
+                fabSession.classList.remove('hidden');
+                fabSession.classList.add('flex');
+                fabDivider.classList.remove('hidden');
+                fabSessionType.textContent = session.type.charAt(0).toUpperCase() + session.type.slice(1);
+
+                // Update timer
+                const startTime = parseTimestamp(session.timestamp);
+                const now = new Date();
+                const diffMs = now - startTime;
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                const diffSecs = Math.floor((diffMs % (1000 * 60)) / 1000);
+                const diffHours = Math.floor(diffMins / 60);
+
+                let timerText;
+                if (diffHours > 0) {
+                    timerText = `${diffHours}:${String(diffMins % 60).padStart(2, '0')}:${String(diffSecs).padStart(2, '0')}`;
+                } else {
+                    timerText = `${diffMins}:${String(diffSecs).padStart(2, '0')}`;
+                }
+                fabSessionTimer.textContent = timerText;
+            } else {
+                activeSessionId = null;
+                fabSession.classList.add('hidden');
+                fabSession.classList.remove('flex');
+                fabDivider.classList.add('hidden');
+            }
+        }
+
+        function stopActiveSession() {
+            if (activeSessionId) {
+                endSession(activeSessionId);
+                updateFloatingActionBar();
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initDateTimeFields();
@@ -1207,12 +1471,16 @@
             updateDashboard();
             updateLastUpdated();
             updateCurrentTime();
+            updateFloatingActionBar();
             // Update current time every second
             setInterval(updateCurrentTime, 1000);
             // Update last updated every minute
             setInterval(updateLastUpdated, 60000);
-            // Update live timers every second
-            setInterval(updateLiveTimers, 1000);
+            // Update live timers and floating action bar every second
+            setInterval(() => {
+                updateLiveTimers();
+                updateFloatingActionBar();
+            }, 1000);
             // Refresh recent activity every minute to update "time ago"
             setInterval(() => {
                 updateRecentActivity();
@@ -1261,6 +1529,16 @@
             return parsed;
         }
 
+        // Helper to get local date string in YYYY-MM-DD format
+        function getLocalDateString(date = new Date()) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        // Helper to get local time string in HH:MM format
+        function getLocalTimeString(date = new Date()) {
+            return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+
         function updateLiveTimers() {
             const liveTimers = document.querySelectorAll('.live-timer');
             const now = new Date();
@@ -1299,6 +1577,7 @@
 
             updateDashboard();
             filterHistory();
+            updateFloatingActionBar();
             showToast(`Session ended: ${record.duration} min recorded!`);
         }
 
@@ -1390,8 +1669,8 @@
 
         function initDateTimeFields() {
             const now = new Date();
-            document.getElementById('record-date').value = now.toISOString().split('T')[0];
-            document.getElementById('record-time').value = now.toTimeString().slice(0, 5);
+            document.getElementById('record-date').value = getLocalDateString(now);
+            document.getElementById('record-time').value = getLocalTimeString(now);
         }
 
         function setupFormListeners() {
@@ -1439,8 +1718,8 @@
 
         function openMedicalModal() {
             const now = new Date();
-            document.getElementById('med-date').value = now.toISOString().split('T')[0];
-            document.getElementById('med-time').value = now.toTimeString().slice(0, 5);
+            document.getElementById('med-date').value = getLocalDateString(now);
+            document.getElementById('med-time').value = getLocalTimeString(now);
             document.getElementById('med-type').value = 'checkup';
             toggleMedicalFields();
             document.getElementById('medical-modal').classList.add('active');
@@ -1610,8 +1889,8 @@
             const record = {
                 id: Date.now(),
                 type: type,
-                date: now.toISOString().split('T')[0],
-                time: now.toTimeString().slice(0, 5),
+                date: getLocalDateString(now),
+                time: getLocalTimeString(now),
                 timestamp: now.toISOString(),
                 duration: null,
                 notes: ''
@@ -1646,8 +1925,8 @@
             const record = {
                 id: Date.now(),
                 type: 'feeding',
-                date: now.toISOString().split('T')[0],
-                time: now.toTimeString().slice(0, 5),
+                date: getLocalDateString(now),
+                time: getLocalTimeString(now),
                 timestamp: now.toISOString(),
                 duration: null,
                 leftSide: side === 'left' || side === 'both',
@@ -1710,7 +1989,8 @@
         }
 
         function updateDashboard() {
-            const today = new Date().toISOString().split('T')[0];
+            // Use local date to match how records store their date
+            const today = getLocalDateString();
             const todayRecords = records.filter(r => r.date === today);
 
             const stats = {
@@ -1747,6 +2027,7 @@
             updateRecentActivity();
             updateCharts();
             updateLastUpdated();
+            updateFloatingActionBar();
             markAsUnsaved();
         }
 
@@ -2314,7 +2595,7 @@
             for (let i = 6; i >= 0; i--) {
                 const date = new Date();
                 date.setDate(date.getDate() - i);
-                const dateStr = date.toISOString().split('T')[0];
+                const dateStr = getLocalDateString(date);
                 last7Days.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
 
                 const dayRecords = records.filter(r => r.date === dateStr);
@@ -2417,7 +2698,7 @@
             for (let i = 6; i >= 0; i--) {
                 const date = new Date();
                 date.setDate(date.getDate() - i);
-                const dateStr = date.toISOString().split('T')[0];
+                const dateStr = getLocalDateString(date);
                 labels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
 
                 const dayRecords = records.filter(r => r.date === dateStr);
@@ -2509,3 +2790,4 @@
     </script>
 </body>
 </html>
+
